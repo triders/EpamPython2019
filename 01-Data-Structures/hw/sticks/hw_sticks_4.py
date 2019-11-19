@@ -100,16 +100,16 @@ print(len(vines_1), len(vines_2))
 
 # merge 2 vines list
 vines = []
-for vine in vines_1[:5]:
-    if vine not in vines_2[:5]:
+for vine in vines_1:
+    if vine not in vines_2:
         vines.append(vine)
         continue
 
 for vine in vines_2:
     vines.append(vine)
 
-# print(f'num of duplicates: {len(vines_1) + len(vines_2) - len(vines)}') # 1989
-print(f'num of vines {len(vines)}')
+print(f'Num of duplicates: {len(vines_1) + len(vines_2) - len(vines)}') # 1989
+print(f'Total num of vines {len(vines)}')
 
 with open(r'wine_data.json', 'w') as vines_file:
-    vines_file.write(repr(vines))
+    vines_file.write(str(vines))
