@@ -89,9 +89,9 @@ def json_parse(j_str):
     return dict_list
 
 
-with open(r'winedata_1.json', 'r') as vine_1:
+with open('winedata_1.json', 'r') as vine_1:
     vines_str_1 = vine_1.read()
-with open(r'winedata_2.json', 'r') as vine_2:
+with open('winedata_2.json', 'r') as vine_2:
     vines_str_2 = vine_2.read()
 
 vines_1 = json_parse(vines_str_1)
@@ -111,5 +111,5 @@ for vine in vines_2:
 print(f'Num of duplicates: {len(vines_1) + len(vines_2) - len(vines)}') # 1989
 print(f'Total num of vines {len(vines)}')
 
-with open(r'wine_data.json', 'w') as vines_file:
+with open('wine_data.json', 'w') as vines_file:
     vines_file.write(str(vines))
