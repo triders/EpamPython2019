@@ -19,42 +19,42 @@
  (Не забудьте подписать оси)
 P.S. За незакрытый файловый дескриптор - караем штрафным дезе.
 """
+import matplotlib.pyplot as plt
 
-gene_num = -1
-dna = []
-with open(r'files\dna.fasta', 'r') as dna_file:
+
+with open('files\dna.fasta', 'r') as dna_file:
     dna_lines = dna_file.readlines()
+    dna = []
+    dna_names = []
     for line in dna_lines:
-        if line[0] == '>':
-            gene_num += 1
+        if line.startswith('>'):
             dna.append('')
+            dna_names.append(line[1:].strip())
             continue
-        dna[gene_num] += line[:-2]
+        dna[-1] += line.strip()
+
      
 with open(r'files\rna_codon_table.txt', 'r') as codon_table_file:
     codon_table = codon_table_file.read()
-    for i in codon_table:
-        i = i.strip()
+
 
 codon_table = codon_table.split()
-codon_dict = {codon_table[i]:codon_table[i+1] for i in range(0,len(codon_table),2)}
+codon_dict = {codon_table[i]:codon_table[i+1] for i in range(0, len(codon_table), 2)}
 
 
 def translate_from_dna_to_rna(dna):
-    
-    dna_to_rna = {'T': 'A', 'A': 'U', 'C': 'G', 'G': 'C'}
-    rna = ['' for i in range(len(dna))]
+    """Returns list of RNA genes from list of DNA genes"""
 
-    gene_num = -1
+    rna = []
     for gene in dna:
-        gene_num += 1
-        for nuc in gene:
-            rna[gene_num] += dna_to_rna.get(nuc)
+        rna.append(gene.replace('T', 'U'))
     return rna
 
 
 def count_nucleotides(dna):
+    """Returns statistics of A, C, G, T nucleotides in DNA
 
+    Takes list of DNA genes and returns list of dicts with stats"""
     num_of_nucleotides = []
     for gene in dna:
         num_of_nucleotides.append({'A':gene.count('A'), 'C':gene.count('C'),
@@ -63,6 +63,7 @@ def count_nucleotides(dna):
 
 
 def translate_rna_to_protein(rna):
+    """Returns list of proteins from list of RNA"""
     
     protein = []
     for gene in rna:
@@ -77,23 +78,37 @@ def translate_rna_to_protein(rna):
     return protein
 
 
-#print(count_nucleotides(dna))
+def dna_transcription_file_output(dna):
+    """Writes 3 files:
+    1. Nucleotides statistics in DNA
+    2. RNA list from DNA
+    3. Proteins from RNA using codon_table"""
 
-#rna = translate_from_dna_to_rna(dna)
-
-#print(translate_rna_to_protein(rna))
-
-def dna_to_protein_file_output(dna):
     nucleotides_stats = count_nucleotides(dna)
-    
     rna = translate_from_dna_to_rna(dna)
     protein = translate_rna_to_protein(rna)
 
-    with open(r'nucleotides_stats.txt', 'w') as nuc_file:
+    with open('nucleotides_stats.txt', 'w') as nuc_file:
         nuc_file.write(str(nucleotides_stats))
-    with open(r'rna.txt', 'w') as rna_file:
+    with open('rna.txt', 'w') as rna_file:
         rna_file.write(str(rna))
-    with open(r'protein_codons.txt', 'w') as protein_file:
+    with open('protein_codons.txt', 'w') as protein_file:
         protein_file.write(str(protein))
 
-dna_to_protein_file_output(dna)
+    # draw hist
+    gene_1 = plt.bar(nucleotides_stats[0].keys(), nucleotides_stats[0].values(),
+                     width = 0.4, align = 'edge', label = dna_names[0])
+    gene_2 = plt.bar(nucleotides_stats[1].keys(), nucleotides_stats[1].values(),
+                     width = 0.4, align = 'center', label = dna_names[1])
+
+    plt.xlabel('Nucleotides name')
+    plt.ylabel('Nucleotides count')
+    for rect in gene_1 + gene_2:
+        height = rect.get_height()
+        plt.text(rect.get_x() + rect.get_width() / 2.0, height, '%d' % int(height), ha='center', va='bottom')
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+           ncol=1, borderaxespad=0.)
+
+    plt.savefig('nucleotides_stats_hist.png')
+
+dna_transcription_file_output(dna)
