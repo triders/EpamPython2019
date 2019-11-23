@@ -8,7 +8,7 @@ def split_str_of_json_objects(s):
         lst[i] = lst[i][:bracket_index]
     # clear empty ''
     lst = list(filter(lambda x: len(str(x)) > 0, lst))
-    return lst
+    return lst[:40]
 
 
 def json_object_to_dict(j_str):
@@ -70,7 +70,8 @@ def json_object_to_dict(j_str):
     pre_dict.append(new_lst[-1].strip())
 
     # make dict from list
-    result_dict = {pre_dict[i]: pre_dict[i + 1] for i in range(0, len(pre_dict), 2)}
+    result_dict = {pre_dict[i]: pre_dict[i + 1] for i in
+                   range(0, len(pre_dict), 2)}
     return result_dict
 
 
@@ -84,7 +85,7 @@ def json_parse(j_str):
     return dict_list
 
 
-def json_dump (lst):
+def json_dump(lst):
     """takes list of dicts and return a string json file"""
     result = ''
     for item in lst:
@@ -92,14 +93,8 @@ def json_dump (lst):
         tmp = ''
         for key, value in dict_items:
             tmp += f"{str(key)}: {str(value) if value != 0 else 'null'}, "
-        result += '{'+ tmp[:-2] + '}, '
+        result += '{' + tmp[:-2] + '}, '
     return '[' + result[:-2] + ']'
-
-
-number_of_duplicates = 0
-duplicates_in_wines_1 = 0
-duplicates_in_wines_2 = 0
-duplicates_between_wines_1_and_wines_2 = 0
 
 
 # OPEN FILES and REMOVE DUPLICATES
@@ -137,7 +132,6 @@ print(f'duplicates_in_wines_2 = {duplicates_in_wines_2}')
 # merge 2 wines list of dicts
 wines = wines_1 + wines_2
 
-
 # SORTING
 
 
@@ -160,8 +154,12 @@ for wine in wines:
 print(f'Num of duplicates: '
       f'{len(wines_1_with_duplicates) + len(wines_2_with_duplicates) - len(wines)}')
 print(f'Total num of wines {len(wines)}')
-wines = json_dump(wines)
 
+
+# DUMP and WRITE into json file
+
+
+wines = json_dump(wines)
 
 with open('winedata_full.json', 'w') as wines_file:
     wines_file.write(wines)
