@@ -1,7 +1,7 @@
 # Статистика по винам
 
 ### Общая статистика по сортам вин
-В объединенном файле winedata_full.json — 119988 экземпляров вин.
+В объединенном файле winedata_full.json — 119988 экземпляров вин. Файл доступен по ссылке: [winedata_full.json](https://drive.google.com/open?id=1y0nI4tg9qjaEPZjLL4JeCq3cwlfIgYdT)
 
 |     Сорт      | average_price | min_price | max_price | most_common_region | most_common_country | average_score |
 |:--------------|:-------------:|:---------:|:---------:|:------------------:|:-------------------:|:-------------:|
