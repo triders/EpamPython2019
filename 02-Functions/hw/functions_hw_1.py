@@ -40,53 +40,14 @@ start, stop и step и при использовании всех трех, до
 """
 
 
-def ranger(*args):
-    start = 0
-    step = 1
-
-    if len(args) == 3:
-        start = args[0]
-        stop = args[1]
-        step = args[2]
-    elif len(args) == 1:
-        stop = args[0]
-    else:
-        return 'wrong arguments number: ' + str(len(lst))
-    ranger_list = list(range(start, stop, step))
-    return ranger_list
-
-
-# print(ranger(3,10,3))
-
-
-def letters_range(*args, **kwargs):
-    """args: (stop_letter) or (start_letter, stop_letter) or (start_letter, stop_letter, step(int))
-    kwargs = {some_letter : some_letter_replace_symbol}
-
-    Returns range of letters from alphabet, optionally replacing letters using replace_dict"""
-
-    replace_dict = {**kwargs}
-    len_args = len(args)
-    if len_args == 1:
-        start = ord('a')
-        stop = ord(args[0])
-        step = 1
-    elif len_args == 2:
-        start = ord(args[0])
-        stop = ord(args[1])
-        step = 1
-    elif len_args == 3:
-        start = ord(args[0])
-        stop = ord(args[1])
-        step = args[2]
-    else:
-        return 'wrong args number: ' + str(len(args)) + ' (expected 1, 2 or 3)'
-
-    letters_dict = {chr(i): chr(i) for i in range(start, stop, step)}
+def letters_range(stop, start='a', step=1, **replace_dict):
+    stop, start = start, stop
+    letters_dict = {chr(i): chr(i) for i in range(ord(start), ord(stop), step)}
     letters_dict.update(replace_dict)
+
     return list(letters_dict.values())
 
 
-# print(letters_range('g', 'p', **{'l': 7, 'o': 0}))
-# print(letters_range('g', 'p'))
+print(letters_range('g', 'p', **{'l': 7, 'o': 0}))
+print(letters_range('g', 'p'))
 print(letters_range('b', 'w', 2))

@@ -8,6 +8,7 @@
 
 counter_name = 10
 
+
 def func(counter):
     counter /= 2
     return counter
@@ -23,5 +24,7 @@ def make_it_count(function, counter):
     return new_function(function, counter)
 
 
-print(make_it_count(func, counter_name))
+a = make_it_count
+print(a(func, counter_name))
+
 

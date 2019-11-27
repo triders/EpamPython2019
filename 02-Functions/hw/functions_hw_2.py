@@ -28,26 +28,20 @@ def double(a):
     return a
 
 
-def atom(a=None):
-
-    value = int(a)
+def atom(value=None):
 
     def get_value():
-        nonlocal value
         return value
 
-    def set_value(new_value=None):
+    def set_value(new_value):
         nonlocal value
-        new_value = int(input('new value = '))
         value = new_value
         return value
 
-    def process_value():
+    def process_value(*args):
         nonlocal value
-        func_str = input('write function(s) to process value (separate by space): ')
-        func_list = func_str.split()
-        for func in func_list:
-            value = eval(func)(value)
+        for func in args:
+            value = func(value)
         return value
 
     def delete_value():
@@ -55,22 +49,16 @@ def atom(a=None):
         value = None
         return value
 
-    while True:
-        action = input('get value ------ print 1\nset new value -- print 2\n'
-                       'process value -- print 3\ndelete value --- print 4\n'
-                       'exit ----------- print 5\n>>> ')
-        if action == '1':
-            print(get_value())
-        elif action == '2':
-            set_value()
-        elif action == '3':
-            process_value()
-        elif action == '4':
-            delete_value()
-        elif action == '5':
-            break
-
-    return value
+    return get_value, set_value, process_value, delete_value
 
 
-atom(2)
+get_v, set_v, proc_v, del_v = atom(2)
+
+print(get_v())
+set_v(3)
+print(get_v())
+proc_v(inc, double)
+print(get_v())
+del_v()
+print(get_v())
+
