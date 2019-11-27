@@ -5,13 +5,12 @@
 
 |     Сорт      | average_price | min_price | max_price | most_common_region | most_common_country | average_score |
 |:--------------|:-------------:|:---------:|:---------:|:------------------:|:-------------------:|:-------------:|
-| Gewurztraminer|$28.996        |$15        |$197       |Yakima Valley       |US                   |89.395         |
-| Riesling      |$31.230        |$12        |$775       |Yakima Valley       |Ukraine              |89.478         |
-| Merlot        |$28.869        |$6         |$625       |Yountville          |Uruguay              |87.162         |
-| Madera        |$26.000        |$15        |$36        |Mendoza             |US                   |85.615         |
-| Tempranillo   |$30.769        |$10        |$600       |Yolo County         |US                   |87.468         |
-| Red Blend     |$34.187        |$11        |$500       |Yountville          |Uruguay              |88.369         |
+| Gewurztraminer|$26.17         |$6         |$197       |Yakima Valley       |US                   |88.56          |
+| Riesling      |$32.60         |$5         |$775       |Yakima Valley       |Ukraine              |89.48          |
+| Merlot        |$29.27         |$4         |$625       |Yountville          |Uruguay              |87.16          |
+| Madera        |$26.00         |$15        |$36        |Mendoza             |US                   |85.62          |
+| Tempranillo   |$31.14         |$4         |$600       |Yolo County         |US                   |87.47          |
+| Red Blend     |$36.09         |$5         |$500       |Yountville          |Uruguay              |88.37          |
 
-*p. s. Статистика для сортов 'Madera' и 'Gewurztraminer'была собрана по title.*
-
+*p. s. Статистика для сорта 'Madera' была собрана по title, так как сорт отсутсвовал в variety.*
 
