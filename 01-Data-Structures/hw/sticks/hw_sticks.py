@@ -98,45 +98,50 @@ def stats_for_parsed_json(wines, wines_selection):
 
     # make template
 
+    wines_selection[0] = r'"Gew\u00fcrztraminer"'
+
     wines_stats = {}
     for variety in wines_selection:
-        metrics = {'"average_price"': {"total": None, "count": 0},
-                   '"min_price"': {"total": None, "count": 0},
-                   '"max_price"': {"total": None, "count": 0},
+        metrics = {'"average_price"': {"total": None, "count": None},
+                   '"min_price"': {"total": None, "count": None},
+                   '"max_price"': {"total": None, "count": None},
                    '"most_common_region"': {},
                    '"most_common_country"': {},
-                   '"average_score"': {"total": None, "count": 0}}
+                   '"average_score"': {"total": None, "count": None}}
         wines_stats.update({variety: metrics})
 
-    # gather stats info
+     # gather stats info
 
     for wine in wines:
+        # wines_stats
+
         variety = wine.get('"variety"')
+
         title = wine.get('"title"')
 
         if title.find('Madera') != -1:
             variety = '"Madera"'
-        elif title.find('Gewurztraminer') != -1:
-            variety = '"Gewurztraminer"'
+
         if variety in wines_selection:
+            if wine['"price"'] > 0:
 
-            # average price
-            total = wines_stats[variety]['"average_price"']["total"] or 0
-            wines_stats[variety]['"average_price"']["total"] = total + wine['"price"']
-            count = wines_stats[variety]['"average_price"']["count"] or 0
-            wines_stats[variety]['"average_price"']["count"] = count + 1
+                # average price
+                total = wines_stats[variety]['"average_price"']["total"] or 0
+                wines_stats[variety]['"average_price"']["total"] = total + wine['"price"']
+                count = wines_stats[variety]['"average_price"']["count"] or 0
+                wines_stats[variety]['"average_price"']["count"] = count + 1
 
-            # min price
-            min_price = wines_stats[variety]['"min_price"']["total"] or 1000000
-            new_price = wine['"price"']
-            if new_price < min_price:
-                wines_stats[variety]['"min_price"']["total"] = new_price
+                # min price
+                min_price = wines_stats[variety]['"min_price"']["total"] or 1000000
+                new_price = wine['"price"']
+                if new_price < min_price:
+                    wines_stats[variety]['"min_price"']["total"] = new_price
 
-            # max price
-            max_price = wines_stats[variety]['"max_price"']["total"] or 0
-            new_price = wine['"price"']
-            if new_price > max_price:
-                wines_stats[variety]['"max_price"']["total"] = new_price
+                # max price
+                max_price = wines_stats[variety]['"max_price"']["total"] or 0
+                new_price = wine['"price"']
+                if new_price > max_price:
+                    wines_stats[variety]['"max_price"']["total"] = new_price
 
             # most common region
             regions = wines_stats[variety]['"most_common_region"']
@@ -154,21 +159,25 @@ def stats_for_parsed_json(wines, wines_selection):
                 else:
                     countries[wine['"country"']] += 1
 
-            # average score
-            total = wines_stats[variety]['"average_score"']["total"] or 0
-            wines_stats[variety]['"average_score"']["total"] = total + int(wine[
-                '"points"'].strip('"'))
-            count = wines_stats[variety]['"average_score"']["count"] or 0
-            wines_stats[variety]['"average_score"']["count"] = count + 1
+            points = int(wine['"points"'].strip('"'))
+            if points > 0:
+
+                # average score
+                total = wines_stats[variety]['"average_score"']["total"] or 0
+                wines_stats[variety]['"average_score"']["total"] = total + points
+                count = wines_stats[variety]['"average_score"']["count"] or 0
+                wines_stats[variety]['"average_score"']["count"] = count + 1
+
     # make stats in right view
 
     for key, value in wines_stats.items():
         # average price
-        if value['"average_price"']["count"] == 0:
+        if value['"average_price"']["count"] is None:
             value['"average_price"'] = 'null'
         else:
             value['"average_price"'] = round(
-                value['"average_price"']["total"]/value['"average_price"']["count"],3)
+                value['"average_price"']["total"] /
+                value['"average_price"']["count"], 2)
 
         # min price
         value['"min_price"'] = value['"min_price"']["total"] or 'null'
@@ -189,13 +198,15 @@ def stats_for_parsed_json(wines, wines_selection):
             value['"most_common_country"'] = 'null'
 
         # average score
-        if value['"average_score"']["count"] == 0:
+        if value['"average_score"']["count"] is None:
             value['"average_score"'] = 'null'
         else:
             value['"average_score"'] = round(
                 value['"average_score"']["total"] /
-                value['"average_score"']["count"], 3)
+                value['"average_score"']["count"], 2)
 
+    wines_stats.update({'"Gewurztraminer"': wines_stats[r'"Gew\u00fcrztraminer"']})
+    del wines_stats[r'"Gew\u00fcrztraminer"']
     return wines_stats
 
 
@@ -259,9 +270,7 @@ for wine in wines:
 
 print('making stats')
 
-one = '"Gewurztraminer"'
-another = '"Gew\u00fcrztraminer"'
-wines_selection = [one, '"Riesling"', '"Merlot"',
+wines_selection = ['"Gewurztraminer"', '"Riesling"', '"Merlot"',
                    '"Madera"', '"Tempranillo"', '"Red Blend"']
 
 stats = stats_for_parsed_json(wines, wines_selection)
