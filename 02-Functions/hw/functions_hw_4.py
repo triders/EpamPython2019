@@ -27,40 +27,50 @@ source_code:
 '''
 
 import inspect
-import collections
 
 
-def print_func(*args, **kwargs):
+def letters_range(stop, start='a', step=1, **replace_dict):
+    stop, start = start, stop
+    letters_dict = {chr(i): chr(i) for i in range(ord(start), ord(stop), step)}
+    letters_dict.update(replace_dict)
+
+    return list(letters_dict.values())
+
+
+def return_func(*args, **kwargs):
     return args, kwargs
 
 
 def modified_func(function, *fixated_args, **fixated_kwargs):
 
-    def new_function(*args1, **kwargs1):
+    def new_function(*args, **kwargs):
 
-        p_values = list(inspect.signature(function).parameters.values())
-        func_args = p_values[0]
-        print(func_args)
-        func_kwargs = p_values[1]
-        print(func_kwargs)
-        '''
-        d = dict(func_kwargs)
-        d.update(fixated_kwargs)
-        d.update(**kwargs1)
-        '''
-        d = dict(fixated_kwargs)
-        d.update(kwargs1)
-        return function(*func_args, *fixated_args, *args1, **d)
+        new_args = (*fixated_args, *args)
+        new_kwargs = fixated_kwargs
+        new_kwargs.update(kwargs)
 
+        return function(*new_args, **new_kwargs)
+    insp = inspect.getargvalues(inspect.currentframe())
+    new_doc = f"""A func implementation of {function.__name__}
+with pre-applied arguments being:
+fixated_args: {insp.locals['fixated_args']} 
+и fixated_kwargs: {insp.locals['fixated_kwargs']}
+source_code:
+{inspect.getsource(new_function)}
+"""
+    new_function.__doc__ = new_doc
     return new_function
 
 
 # return new_function
-new_f = modified_func(print_func, 'q', 'w', **{'c': 'er', 'd': 'ty'})
+new_f = modified_func(return_func, 'q', 'w', **{'e': 'rty'})
+new_letters_range = modified_func(letters_range, **{'a': 'aaaaaa'})
 
 # use new_function
 print(new_f())
-print(new_f('aa', 'bb', **{'c': 'err', 'd': 'tyy'}))
+print(new_f('qq', 'ww', **{'e': 'rtyyyyyy'}))
+print(new_f.__doc__)
 
+print(new_letters_range('a', 'c'))
 
 
