@@ -53,6 +53,79 @@ import datetime
 from collections import defaultdict
 
 
+class DeadlineError(Exception):
+    pass
+
+
+class Homework:
+
+    def __init__(self, text, days):
+        self.text = text
+        self.days = days
+        self.created = datetime.datetime.today()
+        self.deadline = self.created + datetime.timedelta(days=self.days)
+
+    def is_active(self):
+        return self.deadline > datetime.datetime.today()
+
+
+class Student:
+
+    def __init__(self, last_name, first_name):
+        self.last_name = last_name
+        self.first_name = first_name
+
+    def do_homework(self, hw, solve):
+        if not hw.is_active():
+            print('Deadline is passed, you are late.')
+            raise DeadlineError
+        return HomeworkResult(self, hw, solve)
+
+
+class Teacher(Student):
+
+    homework_done = defaultdict(dict)
+
+    def __init__(self, last_name, first_name):
+        Student.__init__(self, last_name, first_name)
+        self.text = None
+        self.days = None
+
+    def create_homework(self, text, days):
+        self.text = text
+        self.days = days
+        return Homework(text, days)
+
+    def check_homework(self, hw_res):
+        if len(hw_res.solution) >= 5:
+            self.homework_done.update({hw_res.homework: [hw_res.solution,
+                                                         hw_res.author]})
+            return True
+        else:
+            print('Homework done wrong')
+            return False
+
+    @classmethod
+    def reset_results(cls, hw=None):
+        if hw is None:
+            cls.homework_done.clear()
+            return
+        del cls.homework_done[hw]
+
+
+class HomeworkResult:
+
+    def __init__(self, stud, hw, solution):
+
+        self.solution = solution
+        self.author = stud
+        self.created = hw.created
+        if isinstance(hw, Homework):
+            self.homework = hw
+        else:
+            print('HomeWorkResult object must take HomeWork object')
+
+
 if __name__ == '__main__':
     opp_teacher = Teacher('Daniil', 'Shadrin')
     advanced_python_teacher = Teacher('Aleksandr', 'Smetanin')
