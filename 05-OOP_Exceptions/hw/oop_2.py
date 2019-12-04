@@ -53,7 +53,11 @@ import datetime
 from collections import defaultdict
 
 
-class DeadlineError(Exception):
+class HomeworkError(Exception):
+    pass
+
+
+class DeadlineError(HomeworkError):
     pass
 
 
@@ -62,68 +66,65 @@ class Homework:
     def __init__(self, text, days):
         self.text = text
         self.days = days
-        self.created = datetime.datetime.today()
+        self.created = datetime.datetime.now()
         self.deadline = self.created + datetime.timedelta(days=self.days)
 
     def is_active(self):
-        return self.deadline > datetime.datetime.today()
+        return self.deadline > datetime.datetime.now()
 
 
 class Student:
 
-    def __init__(self, last_name, first_name):
-        self.last_name = last_name
+    def __init__(self, first_name, last_name):
         self.first_name = first_name
+        self.last_name = last_name
+        self.full_name = first_name + ' ' + last_name
 
-    def do_homework(self, hw, solve):
-        if not hw.is_active():
-            print('Deadline is passed, you are late.')
-            raise DeadlineError
-        return HomeworkResult(self, hw, solve)
+    def do_homework(self, homework, solution):
+        if not homework.is_active():
+            raise DeadlineError('Deadline is passed, you are late.')
+        return HomeworkResult(self, homework, solution)
 
 
 class Teacher(Student):
 
     homework_done = defaultdict(dict)
 
-    def __init__(self, last_name, first_name):
-        Student.__init__(self, last_name, first_name)
-        self.text = None
-        self.days = None
+    def __init__(self, first_name, last_name):
+        Student.__init__(self, first_name, last_name)
 
-    def create_homework(self, text, days):
-        self.text = text
-        self.days = days
+    @staticmethod
+    def create_homework(text, days):
         return Homework(text, days)
 
-    def check_homework(self, hw_res):
-        if len(hw_res.solution) >= 5:
-            self.homework_done.update({hw_res.homework: [hw_res.solution,
-                                                         hw_res.author]})
+    @classmethod
+    def check_homework(cls, homework_result):
+        if len(homework_result.solution) > 5:
+            cls.homework_done[homework_result.homework].update(
+                {homework_result.author.full_name: homework_result.solution})
             return True
         else:
             print('Homework done wrong')
             return False
 
     @classmethod
-    def reset_results(cls, hw=None):
-        if hw is None:
+    def reset_results(cls, homework=None):
+        if homework is None:
             cls.homework_done.clear()
             return
-        del cls.homework_done[hw]
+        del cls.homework_done[homework]
 
 
 class HomeworkResult:
 
-    def __init__(self, stud, hw, solution):
-
+    def __init__(self, author, homework, solution):
         self.solution = solution
-        self.author = stud
-        self.created = hw.created
-        if isinstance(hw, Homework):
-            self.homework = hw
-        else:
-            print('HomeWorkResult object must take HomeWork object')
+        self.author = author
+        self.created = datetime.datetime.now()
+        self.homework = homework
+
+        if not isinstance(homework, Homework):
+            raise HomeworkError('HomeworkResult must take HomeWork object')
 
 
 if __name__ == '__main__':
