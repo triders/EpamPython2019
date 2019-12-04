@@ -6,7 +6,9 @@
 инкрементирует значение глобальной переменной с именем counter_name.
 """
 
-counter_name = 10
+
+counter_name_1 = 10
+counter_name_2 = 20
 
 
 def func(*args):
@@ -18,17 +20,17 @@ def func(*args):
     return new_args
 
 
-def make_it_count(function, counter_name):
+def make_it_count(function, *counter_names):
 
     def new_function(*args):
-
-        globals()[counter_name] += 1
+        for name in counter_names:
+            globals()[name] += 1
         return function(*args)
 
     return new_function
 
 
-a = make_it_count(func, 'counter_name')
-print(counter_name)
+a = make_it_count(func, 'counter_name_1', 'counter_name_2')
+print(counter_name_1, counter_name_2)
 lst = a(*[1, 2, 3])
-print(counter_name)
+print(counter_name_1, counter_name_2)
