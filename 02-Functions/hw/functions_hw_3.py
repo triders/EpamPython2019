@@ -9,22 +9,26 @@
 counter_name = 10
 
 
-def func(counter):
-    counter /= 2
-    return counter
+def func(*args):
+
+    new_args = []
+    for arg in args:
+        new_args.append(arg/2)
+
+    return new_args
 
 
-def make_it_count(function, counter):
+def make_it_count(function, counter_name):
 
-    def new_function(function, counter):
+    def new_function(*args):
 
-        counter += 1
-        return function(counter)
+        globals()[counter_name] += 1
+        return function(*args)
 
-    return new_function(function, counter)
-
-
-a = make_it_count
-print(a(func, counter_name))
+    return new_function
 
 
+a = make_it_count(func, 'counter_name')
+print(counter_name)
+lst = a(*[1, 2, 3])
+print(counter_name)
