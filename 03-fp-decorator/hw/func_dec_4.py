@@ -1,7 +1,7 @@
 def applydecorator(function):
     def decorator(func):
         def inner(*args, **kwargs):
-            function(*args, **kwargs)
+            return function(func, *args, **kwargs)
         return inner
     return decorator
 
