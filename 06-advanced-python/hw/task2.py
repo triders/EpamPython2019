@@ -66,21 +66,9 @@ class Quaternion:
         ab = int(ab) if ab == int(ab) else ab
         return ab
     
-    def __gt__(self, other):
+    def __eq__(self, other):
         if isinstance(other, Quaternion):
-            return abs(self) > abs(other)
-
-    def __lt__(self, other):
-        if isinstance(other, Quaternion):
-            return abs(self) < abs(other)
-
-    def __ge__(self, other):
-        if isinstance(other, Quaternion):
-            return abs(self) >= abs(other)
-
-    def __le__(self, other):
-        if isinstance(other, Quaternion):
-            return abs(self) <= abs(other)
+            return abs(self) == abs(other)
 
     def __str__(self):
         return f'{self.a} + {self.b}i + {self.c}j + {self.d}k'
@@ -110,8 +98,6 @@ print(abs(q5))  # 10
 q6 = q1 + 1
 print(q6) # 2 + 2i + 3j + 4k
 
-print(q1 >= q5)  # False
-print(q1 >= q2)  # True
 print(q1 == q2)  # True
 
 q7 = q1 * q2
