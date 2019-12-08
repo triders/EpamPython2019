@@ -14,7 +14,6 @@ class Graph:
         self.E = E
         self.len = len(E)
         self.bfs_vertex_list = []
-        self.vertex_set = set()
         self.queue = deque()
         self.index = -1
 
