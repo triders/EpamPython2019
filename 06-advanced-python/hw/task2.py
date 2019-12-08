@@ -65,7 +65,7 @@ class Quaternion:
         ab = (self.a**2 + self.b**2 + self.c**2 + self.d**2)**(1/2)
         ab = int(ab) if ab == int(ab) else ab
         return ab
-
+    
     def __gt__(self, other):
         if isinstance(other, Quaternion):
             return abs(self) > abs(other)
@@ -112,6 +112,7 @@ print(q6) # 2 + 2i + 3j + 4k
 
 print(q1 >= q5)  # False
 print(q1 >= q2)  # True
+print(q1 == q2)  # True
 
 q7 = q1 * q2
 print(q7)  # -28 + 4i + 6j + 8k
