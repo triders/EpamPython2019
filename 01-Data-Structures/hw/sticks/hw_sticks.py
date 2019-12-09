@@ -187,13 +187,23 @@ def stats_for_parsed_json(wines, wines_selection):
 
         # most common region
         if len(value['"most_common_region"']) > 0:
-            value['"most_common_region"'] = max(value['"most_common_region"'])
+            max_val = max(value['"most_common_region"'].values())
+            for region in value['"most_common_region"'].keys():
+                if value['"most_common_region"'][region] == max_val:
+                    reg = region
+                    break
+            value['"most_common_region"'] = reg
         else:
             value['"most_common_region"'] = 'null'
 
         # most common country
         if len(value['"most_common_country"']) > 0:
-            value['"most_common_country"'] = max(value['"most_common_country"'])
+            max_val = max(value['"most_common_country"'].values())
+            for country in value['"most_common_country"'].keys():
+                if value['"most_common_country"'][country] == max_val:
+                    cou = country
+                    break
+            value['"most_common_country"'] = cou
         else:
             value['"most_common_country"'] = 'null'
 
@@ -207,6 +217,7 @@ def stats_for_parsed_json(wines, wines_selection):
 
     wines_stats.update({'"Gewurztraminer"': wines_stats[r'"Gew\u00fcrztraminer"']})
     del wines_stats[r'"Gew\u00fcrztraminer"']
+
     return wines_stats
 
 
