@@ -65,12 +65,15 @@ source_code:
 # return new_function
 new_f = modified_func(return_func, 'q', 'w', **{'e': 'rty'})
 new_letters_range = modified_func(letters_range, **{'a': 'aaaaaa'})
+new_min = modified_func(min, -5)
 
-# use new_function
+# use new_functions
 print(new_f())
 print(new_f('qq', 'ww', **{'e': 'rtyyyyyy'}))
 print(new_f.__doc__)
 
 print(new_letters_range('a', 'c'))
+
+print(new_min(1, 3))
 
 
