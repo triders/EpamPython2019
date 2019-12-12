@@ -8,42 +8,59 @@ E - dict(<V> : [<V>, <V>, ...])
 from collections import deque
 
 
+def bfs(graph, start):
+    bfs_seq = [start]
+    queue = deque(graph[start])
+    for i in range(len(graph)):
+        if queue:
+            vertex = queue.popleft()
+            bfs_seq.append(vertex)
+            neighs = graph[vertex]
+            for neigh in neighs:
+                if neigh not in bfs_seq:
+                    if neigh not in queue:
+                        queue.append(neigh)
+        else:
+            # graph is not reachable
+            break
+    return bfs_seq
+
+
 class Graph:
 
     def __init__(self, E):
         self.E = E
         self.len = len(E)
-        self.bfs_vertex_list = []
-        self.queue = deque()
         self.index = -1
+        self.bfs_list = self.bf_search()
 
-        # find first vertex which has neigh(s)
-        vertexes = set(self.E)
-        while not self.bfs_vertex_list:
-            vertex = vertexes.pop()
-            # if has neigh(s)
-            if self.E[vertex]:
-                self.bfs_vertex_list.append(vertex) # add vertex to ordered list
-                self.queue.extend(self.E[vertex]) # add neigh(s) to queue
-
-        # make full bfs_vertex_list
-        while len(self.bfs_vertex_list) < self.len:
-            vertex = self.queue.popleft()
-            self.queue.extend(self.E[vertex])
-            if vertex not in self.bfs_vertex_list:
-                self.bfs_vertex_list.append(vertex)
+    def bf_search(self):
+        self.vertexes = set(self.E.keys())
+        self.queue = deque()
+        self.bfs = []
+        # find first vertex from which we can reach all other vertexes
+        while self.vertexes:
+            start_vertex = self.vertexes.pop()
+            self.bfs = bfs(self.E, start_vertex)
+            if len(self.bfs) == self.len:
+                return self.bfs
+        else:
+            print('Can not reach end of graph from any vertex')
+        return self.bfs
 
     def __next__(self):
         if self.index + 1 >= self.len:
-            return StopIteration
+            raise StopIteration
         self.index += 1
-        return self.bfs_vertex_list[self.index]
+        return self.bfs_list[self.index]
 
     def __iter__(self):
-        return iter(self.bfs_vertex_list)
+        return self
 
 
 E = {'A': ['B', 'C', 'D'], 'B': ['C'], 'C': [], 'D': ['A']}
+
+
 graph = Graph(E)
 
 for vertex in graph:
