@@ -65,10 +65,11 @@ class Quaternion:
         ab = (self.a**2 + self.b**2 + self.c**2 + self.d**2)**(1/2)
         ab = int(ab) if ab == int(ab) else ab
         return ab
-    
+
     def __eq__(self, other):
         if isinstance(other, Quaternion):
-            return abs(self) == abs(other)
+            return [self.a, self.b, self.c, self.d] == \
+                   [other.a, other.b, other.c, other.d]
 
     def __str__(self):
         return f'{self.a} + {self.b}i + {self.c}j + {self.d}k'
@@ -99,9 +100,10 @@ q6 = q1 + 1
 print(q6) # 2 + 2i + 3j + 4k
 
 print(q1 == q2)  # True
+print(q1 == q4)  # False
 
 q7 = q1 * q2
 print(q7)  # -28 + 4i + 6j + 8k
 
-q8 = q1 / q4
-print(q8)  # 0.4022988505747126 + 0.04597701149425287i + 0.0j + 0.09195402298850573k
+q8 = q1 / q5
+print(q8)  # 0.5 + 0.09999999999999999i + 0.0j + 0.2k
