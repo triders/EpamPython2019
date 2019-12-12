@@ -5,8 +5,7 @@
 в точности как функция func, за тем исключением, что всякий раз при вызове
 инкрементирует значение глобальной переменной с именем counter_name.
 """
-
-
+import functools
 counter_name_1 = 10
 counter_name_2 = 20
 
@@ -21,7 +20,7 @@ def func(*args):
 
 
 def make_it_count(function, *counter_names):
-
+    @functools.wraps(function)
     def new_function(*args):
         for name in counter_names:
             globals()[name] += 1
