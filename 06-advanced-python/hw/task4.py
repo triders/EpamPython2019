@@ -11,19 +11,20 @@ V folder1
 > print(file3 in folder2)
 True
 
-V
-|   |text.txt
-|   |test1
-|   |   |tex10.txt
-|   |test2
-|   |   |text2.txt
-|   |test3
-|   |   |4
-|   |   |   |5
-|   |   |   |   |text5.txt
-|   |   |   |   |text55.txt
-|   |test4
 
+V
+|\test
+|   |   |*text.txt
+|   |\test1
+|   |   |*tex10.txt
+|   |\test2
+|   |   |*text2.txt
+|   |\test3
+|   |   |\4
+|   |   |   |\5
+|   |   |   |   |*text5.txt
+|   |   |   |   |*text55.txt
+|   |\test4
 """
 import os
 
@@ -37,28 +38,16 @@ class PrintableFolder:
 
     def __init__(self, path):
         self.path = path
-        self.name = dir_name(self.path)
-        self.content = []
-        for root, dirs, files in os.walk(self.path):
-            self.content.append(dir_name(root))
-            self.content.extend(files)
+        self.name = os.path.basename(self.path)
 
     def __str__(self):
-        res = f'{self.name}\nV\n'  # exception for root
-        n = 1
-        depth = 0
+        res = f'V\n'  # exception for root
+        n = 0
+        depth = -1
         for root, dirs, files in os.walk(self.path):
             sep = '|   '
             prefix = n * sep
-
-            if dir_name(root) == self.name:
-                # exception for files in main root
-                prefix = n * sep
-                for file in files:
-                    res += prefix + '|' + file + '\n'
-                continue
-
-            res += prefix + '|' + dir_name(root) + '\n'
+            res += prefix + '|\\' + os.path.basename(root) + '\n'
 
             if dirs:
                 n += 1
@@ -68,7 +57,7 @@ class PrintableFolder:
                 n += 1
                 prefix = n * sep
                 for file in files:
-                    res += prefix + '|' + file + '\n'
+                    res += prefix + '|*' + file + '\n'
                 n -= 1
 
             if not dirs:
@@ -77,16 +66,16 @@ class PrintableFolder:
         return res
 
     def __contains__(self, item):
-        return item.name in self.content
+        return os.path.exists(self.path + '\\' + item.name)
 
 
 class PrintableFile:
     def __init__(self, path):
         self.path = path
-        self.name = dir_name(path)
+        self.name = os.path.basename(path)
 
     def __str__(self):
-        return str(self.path)
+        return f'name of file: "{self.name}", path: {self.path}'
 
 
 path_to_folder1 = r'C:\Тимофей\#Программирование\test'
@@ -110,3 +99,5 @@ print(file1 in folder1)
 print(file2 in folder1)
 print(file3 in folder1)
 
+print(file1)
+print(file2)
