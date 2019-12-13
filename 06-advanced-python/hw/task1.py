@@ -20,9 +20,6 @@ def bfs(graph, start):
                 if neigh not in bfs_seq:
                     if neigh not in queue:
                         queue.append(neigh)
-        else:
-            # graph is not reachable
-            break
     return bfs_seq
 
 
@@ -38,14 +35,24 @@ class Graph:
         self.vertexes = set(self.E.keys())
         self.queue = deque()
         self.bfs = []
-        # find first vertex from which we can reach all other vertexes
+        # try to find first vertex from which we can reach all other vertexes
         while self.vertexes:
             start_vertex = self.vertexes.pop()
             self.bfs = bfs(self.E, start_vertex)
             if len(self.bfs) == self.len:
                 return self.bfs
         else:
-            print('Can not reach end of graph from any vertex')
+            # Can not reach end of graph from any vertex
+            # will do it in other way:
+            self.vertexes_to_visit = set(self.E.keys())
+            start_vertex = self.vertexes_to_visit.pop()
+            self.bfs = bfs(self.E, start_vertex)
+            self.vertexes_to_visit.difference_update(set(self.bfs))
+            while len(self.bfs) != self.len:
+                self.bfs_add = bfs(self.E, self.vertexes_to_visit.pop())
+                for vertex in self.bfs_add:
+                    if vertex not in self.bfs:
+                        self.bfs.append(vertex)
         return self.bfs
 
     def __next__(self):
@@ -58,7 +65,7 @@ class Graph:
         return self
 
 
-E = {'A': ['B', 'C', 'D'], 'B': ['C'], 'C': [], 'D': ['A']}
+E = {'A': ['B', 'C', 'D'], 'B': ['C'], 'C': [], 'D': ['A'], 'E': []}
 
 
 graph = Graph(E)
