@@ -29,19 +29,18 @@ V
 import os
 
 
-def dir_name(path):
-    """returns name of directory or file from given path"""
-    return path[path.rfind('\\')+1:]
-
-
 class PrintableFolder:
 
     def __init__(self, path):
         self.path = path
         self.name = os.path.basename(self.path)
+        self.content = []
+        for root, _, files in os.walk(self.path):
+            for file in files:
+                self.content.append(PrintableFile(root+'\\'+file))
 
     def __str__(self):
-        res = f'V\n'  # exception for root
+        res = f'V\n'
         n = 0
         depth = -1
         for root, dirs, files in os.walk(self.path):
@@ -66,13 +65,20 @@ class PrintableFolder:
         return res
 
     def __contains__(self, item):
-        return os.path.exists(self.path + '\\' + item.name)
+        # return os.path.exists(self.path + '\\' + item.name)
+        for i in self.content:
+            if item == i:
+                return True
+        return False
 
 
 class PrintableFile:
     def __init__(self, path):
         self.path = path
         self.name = os.path.basename(path)
+
+    def __eq__(self, other):
+        return self.path == other.path and self.name == other.name
 
     def __str__(self):
         return f'name of file: "{self.name}", path: {self.path}'
@@ -94,10 +100,12 @@ file3 = PrintableFile(path_to_file3)
 print(folder1)
 print(folder2)
 
-print(folder2 in folder1)
 print(file1 in folder1)
 print(file2 in folder1)
 print(file3 in folder1)
 
 print(file1)
 print(file2)
+
+for file in folder1.content:
+    print(file)
