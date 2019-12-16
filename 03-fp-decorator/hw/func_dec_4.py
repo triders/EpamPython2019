@@ -1,8 +1,13 @@
 def applydecorator(function):
+
     def decorator(func):
+
         def inner(*args, **kwargs):
+
             return function(func, *args, **kwargs)
+
         return inner
+
     return decorator
 
 
@@ -19,7 +24,3 @@ def foo(*whatever):
 
 foo(40, 2)
 print(*(foo(40, 2)))
-'''
->>>foo
->>>40 2
-'''
