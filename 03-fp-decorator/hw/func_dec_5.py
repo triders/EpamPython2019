@@ -18,10 +18,10 @@ def count_calls_and_time(func, metrics):
             run_time = round(stop - start, 4)
         except:
             res = 'unavailable'
-            run_time = 'unavailable'
+            run_time = math.inf
         metric = {args[0].__name__: run_time}
         if args[1] not in metrics:
-            metrics.update({args[1]:(metric)})
+            metrics.update({args[1]: metric})
         else:
             metrics[args[1]].update(metric)
         return res
@@ -70,6 +70,16 @@ def fib_formula(n):
     return int(((0.5 + sq5/2)**n - (0.5 - sq5/2)**n)/sq5)
 
 
+def choose_best_fib(metrics):
+    max_fib = metrics[max(metrics)]
+    min_time = {'some_func': math.inf}
+    for key, value in max_fib.items():
+        if value < list(min_time.values())[0]:
+            min_time = {key: value}
+    res = f'Best fuction is {list(min_time.keys())[0]}'
+    return res
+
+
 # apply decorator
 
 fib_num = count_calls_and_time(fib_num, FUNCTION_METRICS)
@@ -88,9 +98,11 @@ fib_num(fib_dynamic, 10000)
 
 # print results
 
+print(choose_best_fib(FUNCTION_METRICS))
+
 for i in FUNCTION_METRICS.items():
-    print(f'{i[0]}th Fib number:')
+    print(f'\n{i[0]}th Fib number:')
     for j in i[1].items():
         print(f'Function - {j[0]}, time = {j[1]}')
-    print('\n')
+
 
