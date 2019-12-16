@@ -4,38 +4,42 @@ import functools
 import math
 
 FUNCTION_METRICS = {}
+
 CACHE = {}
 
 
 def count_calls_and_time(func, metrics):
-    @functools.wraps(func)
+
     def wrapper(*args, **kwargs):
         start = time.time()
-        res = func(*args, **kwargs)
-        stop = time.time()
-        run_time = stop - start
-        if func.__name__ not in metrics:
-            metric = {func.__name__: {0: round(run_time, 4)}}
-            metrics.update(metric)
+        try:
+            res = func(*args, **kwargs)
+            stop = time.time()
+            run_time = round(stop - start, 4)
+        except:
+            res = 'unavailable'
+            run_time = 'unavailable'
+        metric = {args[0].__name__: run_time}
+        if args[1] not in metrics:
+            metrics.update({args[1]:(metric)})
         else:
-            metric = {len(metrics[func.__name__]): round(run_time, 4)}
-            metrics[func.__name__].update(metric)
+            metrics[args[1]].update(metric)
         return res
     return wrapper
 
 
+# def fib_num(func, n):
+#     """returns n'th fibonacci number using given function"""
+#     #@functools.wraps(func)
+#     def wrapper(num):
+#         return func(num)
+#     return wrapper(n)
+
 def fib_num(func, n):
     """returns n'th fibonacci number using given function"""
-    @functools.wraps(func)
-    def wrapper(num):
-        return func(num)
-    return wrapper(n)
-
+    return func(n), n
 
 # 1 recursive
-
-# can not count time with recursive calls
-
 
 def fib_recursive(n):
     if n in (1, 2):
@@ -44,7 +48,6 @@ def fib_recursive(n):
 
 
 # 2 recursive with cache
-
 
 def fib_recursive_cache(n):
     if n in CACHE:
@@ -56,22 +59,41 @@ def fib_recursive_cache(n):
         CACHE[n] = res
         return res
 
+
 # 3 dynamic
 
-
 def fib_dynamic(n):
-    fib = [0, 1, 1]
-    for i in range(n-2):
+    fib = [0, 1]
+    for i in range(n-1):
         fib.append(fib[-1] + fib[-2])
     return fib[-1]
+
+
+# formula
+# big errors
+def fib_formula(n):
+    sq5 = math.sqrt(5)
+    return int(((0.5 + sq5/2)**n - (0.5 - sq5/2)**n)/sq5)
 
 
 # apply decorator
 
 fib_num = count_calls_and_time(fib_num, FUNCTION_METRICS)
 
-print(fib_num(fib_recursive, 30))
-print(fib_num(fib_recursive_cache, 1000))
-print(fib_num(fib_dynamic, 1000))
+fib_num(fib_recursive, 30)
+fib_num(fib_recursive, 1000)
+fib_num(fib_recursive, 10000)
 
-print(FUNCTION_METRICS)
+fib_num(fib_recursive_cache, 30)
+fib_num(fib_recursive_cache, 1000)
+fib_num(fib_recursive_cache, 10000)
+
+fib_num(fib_dynamic, 30)
+fib_num(fib_dynamic, 1000)
+fib_num(fib_dynamic, 10000)
+
+for i in FUNCTION_METRICS.items():
+    print(f'{i[0]}th Fib number:')
+    for j in i[1].items():
+        print(f'Function - {j[0]}, time = {j[1]}')
+    print('\n')
