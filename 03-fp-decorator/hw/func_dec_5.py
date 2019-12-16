@@ -28,16 +28,10 @@ def count_calls_and_time(func, metrics):
     return wrapper
 
 
-# def fib_num(func, n):
-#     """returns n'th fibonacci number using given function"""
-#     #@functools.wraps(func)
-#     def wrapper(num):
-#         return func(num)
-#     return wrapper(n)
-
 def fib_num(func, n):
     """returns n'th fibonacci number using given function"""
     return func(n), n
+
 
 # 1 recursive
 
@@ -92,8 +86,11 @@ fib_num(fib_dynamic, 30)
 fib_num(fib_dynamic, 1000)
 fib_num(fib_dynamic, 10000)
 
+# print results
+
 for i in FUNCTION_METRICS.items():
     print(f'{i[0]}th Fib number:')
     for j in i[1].items():
         print(f'Function - {j[0]}, time = {j[1]}')
     print('\n')
+
