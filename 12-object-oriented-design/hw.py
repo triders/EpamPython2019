@@ -68,11 +68,9 @@ class Transport:
 		self.number = Transport._number
 		Transport._number += 1
 
-
 	def start_delivery(self, load: Container):
 		self.start_position = False
 		self.load = load
-
 
 	def step_travel(self):
 		if not self.start_position:
@@ -124,8 +122,7 @@ class Truck(Transport):
 				return
 
 	def __str__(self):
-		return f"truck #{self.number} with load {str(self.load)} \
-		now on location {str(self.location)}"
+		return f"truck #{self.number} with load {str(self.load)} now is on location {str(self.location)}"
 
 
 class Ship(Transport):
@@ -134,7 +131,7 @@ class Ship(Transport):
 		if self.start_position:
 			# start delivery if route to warehouse includes ship
 			for container in containers:
-				
+
 				if not container.delivered \
 				and container.destination.ship_dist !=0 \
 				and container.location == self.start_position:
@@ -168,14 +165,12 @@ class Ship(Transport):
 				return
 
 	def __str__(self):
-		return f"ship #{self.number} with load {str(self.load)}\
-		 now on location {str(self.location)}"
+		return f"ship #{self.number} with load {str(self.load)} now is on location {str(self.location)}"
 
 
 
 warehouses = {'A': Warehouse('A', 1, 4), 'B': Warehouse('B', 5, 0)}
 
-# containers_seq = input('Enter containers sequence: ')
 containers_seq = 'AABABBAB'
 # containers_seq = 'BBBB'
 
