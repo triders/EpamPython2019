@@ -57,6 +57,7 @@ class Graph:
 
     def __next__(self):
         if self.index + 1 >= self.len:
+            self.index = -1
             raise StopIteration
         self.index += 1
         return self.bfs_list[self.index]
