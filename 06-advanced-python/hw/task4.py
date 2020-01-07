@@ -13,20 +13,33 @@ True
 
 
 V
-|\test
-|   |   |*text.txt
-|   |\test1
-|   |   |*tex10.txt
-|   |\test2
-|   |   |*text2.txt
-|   |\test3
-|   |   |\4
-|   |   |   |\5
-|   |   |   |   |*text5.txt
-|   |   |   |   |*text55.txt
-|   |\test4
+|\outer_1
+|   |\inner_1_0
+|   |   |*file_1_0.txt
+|   |\inner_1_1
+|   |   |*file_1_1.txt
+|   |\inner_1_2
+|   |   |*file_1_2.txt
+|   |\inner_1_3
+|   |   |*file_1_3.txt
+|   |\inner_1_4
+|   |   |*file_1_4.txt
 """
 import os
+
+def make_dirs(path, outer_num_of_dirs, inner_num_of_dirs):
+    """makes dirs and files at given path""" 
+    for i in range(outer_num_of_dirs):
+        os.chdir(path)
+        os.mkdir(f'outer_{str(i)}')
+        ipath = path + "\\" + f'outer_{str(i)}'
+
+        for j in range(inner_num_of_dirs):
+            os.chdir(ipath)
+            os.mkdir(f"inner_{str(i) + '_' + str(j)}")
+            os.chdir(ipath + '\\' + f"inner_{str(i) + '_' + str(j)}")
+            with open(f"file_{str(i) + '_' + str(j)}.txt", 'w') as file:
+                pass
 
 
 class PrintableFolder:
@@ -65,7 +78,6 @@ class PrintableFolder:
         return res
 
     def __contains__(self, item):
-        # return os.path.exists(self.path + '\\' + item.name)
         for i in self.content:
             if item == i:
                 return True
@@ -84,28 +96,34 @@ class PrintableFile:
         return f'name of file: "{self.name}", path: {self.path}'
 
 
-path_to_folder1 = r'C:\Тимофей\#Программирование\test'
-path_to_folder2 = r'C:\Тимофей\#Программирование\test\test1'
-path_to_file1 = r'C:\Тимофей\#Программирование\test\text.txt'
-path_to_file2 = r'C:\Тимофей\#Программирование\test\test2\text2.txt'
-path_to_file3 = r'C:\never_land'
+# Make dirs and files to test
 
-folder1 = PrintableFolder(path_to_folder1)
-folder2 = PrintableFolder(path_to_folder2)
 
-file1 = PrintableFile(path_to_file1)
-file2 = PrintableFile(path_to_file2)
-file3 = PrintableFile(path_to_file3)
+path = r"D:\Тимофей\Программирование\EpamPython2019-triders 06.01.2020\06-advanced-python\hw"
 
-print(folder1)
-print(folder2)
+make_dirs(path, 4, 5)
 
-print(file1 in folder1)
-print(file2 in folder1)
-print(file3 in folder1)
 
-print(file1)
-print(file2)
+# test
 
-for file in folder1.content:
-    print(file)
+
+path_to_folder_0 = path + '\\outer_0'
+path_to_folder_1 = path + '\\outer_1'
+path_to_folder_1_1 = path + '\\outer_1\\inner_1_1'
+path_to_file_1_1 = path + '\\outer_1\\inner_1_1\\file_1_1.txt'
+path_to_file_no_file = r'C:\never_land'
+
+folder_0 = PrintableFolder(path_to_folder_0)
+folder_1 = PrintableFolder(path_to_folder_1)
+folder_1_1 = PrintableFolder(path_to_folder_1)
+
+file_1_1 = PrintableFile(path_to_file_1_1)
+
+print(folder_0)
+print(folder_1)
+
+print(file_1_1)
+
+print(file_1_1 in folder_1_1)
+print(file_1_1 in folder_1)
+print(file_1_1 in folder_0)
