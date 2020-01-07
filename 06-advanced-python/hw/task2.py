@@ -22,10 +22,10 @@ class Quaternion:
 
     def __add__(self, other):
         if isinstance(other, Quaternion):
-            return Quaternion(self.a + other.a, self.b + other.b,
+            return eval(self.__class__.__name__)(self.a + other.a, self.b + other.b,
                               self.c + other.c, self.d + other.d)
         elif isinstance(other, int) or isinstance(other, float):
-            return Quaternion(self.a + other, self.b, self.c, self.d)
+            return eval(self.__class__.__name__)(self.a + other, self.b, self.c, self.d)
 
     def __iadd__(self, other):
         if isinstance(other, Quaternion):
@@ -47,19 +47,15 @@ class Quaternion:
             b = a1*b2 + b1*a2 + c1*d2 - d1*c2
             c = a1*c2 - b1*d2 + c1*a2 + d1*b2
             d = a1*d2 + b1*c2 - c1*b2 + d1*a2
-            return Quaternion(a, b, c, d)
+            return eval(self.__class__.__name__)(a, b, c, d)
 
     def __truediv__(self, other):
-        if isinstance(other, Quaternion):
+        if isinstance(other, eval(self.__class__.__name__)):
             m = other.a**2 + other.b**2 + other.c**2 + other.d**2
             a1, b1, c1, d1 = self.a, self.b, self.c, self.d
             a2, b2, c2, d2 = other.a/m, -other.b/m, -other.c/m, -other.d/m
 
-            a = a1*a2 - b1*b2 - c1*c2 - d1*d2
-            b = a1*b2 + b1*a2 + c1*d2 - d1*c2
-            c = a1*c2 - b1*d2 + c1*a2 + d1*b2
-            d = a1*d2 + b1*c2 - c1*b2 + d1*a2
-            return Quaternion(a, b, c, d)
+            return eval(self.__class__.__name__)(a1, b1, c1, d1) * eval(self.__class__.__name__)(a2, b2, c2, d2) 
 
     def __abs__(self):
         ab = (self.a**2 + self.b**2 + self.c**2 + self.d**2)**(1/2)
@@ -67,7 +63,7 @@ class Quaternion:
         return ab
 
     def __eq__(self, other):
-        if isinstance(other, Quaternion):
+        if isinstance(other, eval(self.__class__.__name__)):
             return [self.a, self.b, self.c, self.d] == \
                    [other.a, other.b, other.c, other.d]
 
@@ -75,8 +71,15 @@ class Quaternion:
         return f'{self.a} + {self.b}i + {self.c}j + {self.d}k'
 
     def __repr__(self):
-        return f"Quaternion({self.a}, {self.b}, {self.c}, {self.d})"
+        return f"{self.__class__.__name__}({self.a}, {self.b}, {self.c}, {self.d})"
 
+
+class NewQuaternion(Quaternion):
+    pass
+
+
+nq1 = NewQuaternion(1 ,2 ,3 ,4)
+print (repr(nq1))
 
 q1 = Quaternion(1, 2, 3, 4)
 print(q1)  # 1 + 2i + 3j + 4k
