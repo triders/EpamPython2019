@@ -21,14 +21,14 @@ class Quaternion:
         self.d = d
 
     def __add__(self, other):
-        if isinstance(other, Quaternion):
+        if isinstance(other, eval(self.__class__.__name__)):
             return eval(self.__class__.__name__)(self.a + other.a, self.b + other.b,
                               self.c + other.c, self.d + other.d)
         elif isinstance(other, int) or isinstance(other, float):
             return eval(self.__class__.__name__)(self.a + other, self.b, self.c, self.d)
 
     def __iadd__(self, other):
-        if isinstance(other, Quaternion):
+        if isinstance(other, eval(self.__class__.__name__)):
             self.a += other.a
             self.b += other.b
             self.c += other.c
@@ -39,7 +39,7 @@ class Quaternion:
             return self
 
     def __mul__(self, other):
-        if isinstance(other, Quaternion):
+        if isinstance(other, eval(self.__class__.__name__)):
             a1, b1, c1, d1 = self.a, self.b, self.c, self.d
             a2, b2, c2, d2 = other.a, other.b, other.c, other.d
 
